@@ -1,6 +1,6 @@
 from typing import List
 from pydantic import BaseModel
-
+from datetime import date
 class UserBase(BaseModel):
     name: str
     email: str
@@ -53,4 +53,6 @@ class GroupS(BaseModel):
     
 class GroupCreate(BaseModel):
     name: str
-    description: str    
+    description: str
+    data_ini: date
+    data_fi: date
