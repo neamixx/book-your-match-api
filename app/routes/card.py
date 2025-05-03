@@ -7,6 +7,7 @@ from os import listdir
 from os.path import isfile, join
 from pathlib import Path
 
+router = APIRouter(prefix="/card", tags=["cards"])
 
 def get_random_image():
     image_path = os.path.abspath("./images")

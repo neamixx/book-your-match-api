@@ -14,8 +14,6 @@ def get_db():
     finally:
         db.close()
 
-router = APIRouter()
-
 # Get all groups
 @router.get("/")
 def get_groups(db: Session = Depends(get_db)):
@@ -93,3 +91,16 @@ def get_members(group_name: str, db: Session = Depends(get_db)):
     ).all()
     
     return members
+
+# Get groups of a user
+@router.get("/by-user/{email}")
+def get_user_groups(email: str, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    groups = db.query(Group).join(UserGroupAssociation).filter(
+        UserGroupAssociation.user_id == user.id
+    ).all()
+    
+    return groups
