@@ -58,3 +58,41 @@ async def read_user(email: str = Cookie(None)):
 @router.post("/logout")
 async def logout():
     return JSONResponse(content={"message": "Logout successful"}, cookies={"email": ""})
+
+@router.post("/{id}/embedding")
+async def update_embedding(id: int, request: EmbeddingRequest, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.id == id).first()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if user.embedding is None:
+        user.embedding = request.embedding
+    else:
+        print(user.embedding)
+        print(request.embedding)
+        
+        for request_item in request.embedding:
+            user_items = user.embedding
+            if request_item in user_items:
+                print("Updating existing embedding")
+                user_items[request_item] = request.embedding[request_item]
+            else:
+                print("Adding new embedding")
+                user_items[request_item] = request.embedding[request_item]
+        user.embedding = user_items
+        print(user.embedding)
+        
+    db.query(models.User).filter(models.User.id == id).update({"embedding": user.embedding})
+    db.commit()
+    db.refresh(user)
+
+    return {"message": f"Embedding updated for city {id}"}
+
+@router.get("/{id}")
+def get_user(id: int, db: Session = Depends(get_db)):
+    #Get user by id
+    user = db.query(models.User).filter(models.User.id == id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user

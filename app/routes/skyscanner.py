@@ -20,6 +20,7 @@ BASE_URL = "https://partners.api.skyscanner.net/apiservices/v3/flights/live/sear
 
 # Try to get just the top three results
 # from the API
+'''
 @router.post("/search-flights")
 async def search_flights(request: FlightSearchRequest):
     payload = {
@@ -89,7 +90,7 @@ async def autosuggest_flights(request: AutoSuggestRequest):
             raise HTTPException(status_code=response.status_code, detail=f"HTTP error: {str(e)}")
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
-    
+'''  
 @router.post("/cheapest-flights")
 async def search_flights(request: FlightSearchRequest):
     payload = {
