@@ -29,3 +29,11 @@ class FlightSearchRequest(BaseModel):
     day: int
     adults: int
     cabin_class: str
+
+class AutoSuggestRequest(BaseModel):
+    market: str
+    locale: str
+    searchTerm: str
+    includedEntityTypes: list
+    limit: int
+    isDestination: bool
