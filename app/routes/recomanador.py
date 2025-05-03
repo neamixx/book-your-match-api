@@ -19,6 +19,7 @@ CIUTATS = {
 }
 
 # Models per validar entrada
+# Moure aixo al models 
 class PreferenciesUsuari(BaseModel):
     usuari: str
     preferencies: Dict[str, float]
