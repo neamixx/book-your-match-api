@@ -3,6 +3,11 @@ from app.database import engine
 from app import models
 from app.routes import auth, skyscanner, recomanador
 from fastapi.middleware.cors import CORSMiddleware
+from endpoints.card import router as card_router
+from fastapi.staticfiles import StaticFiles
+
+import os
+
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -18,4 +23,9 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(recomanador.router)
-app.include_router(skyscanner.router)
+
+app.include_router(card_router)
+    
+image_path = os.path.abspath("./images")
+
+app.mount("/static", StaticFiles(directory=image_path), name="static")
