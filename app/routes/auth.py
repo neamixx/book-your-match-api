@@ -41,7 +41,7 @@ def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
     return response
 
 
-@router.get("/users/", response_model=list[User])
+@router.get("/", response_model=list[User])
 def get_users(db: Session = Depends(get_db)):
     #Get all users
     users = db.query(models.User).all()

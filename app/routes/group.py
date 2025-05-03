@@ -5,6 +5,8 @@ from ..database import SessionLocal
 from ..models import *
 
 router = APIRouter(prefix="/groups", tags=["groups"])
+
+
 def get_db():
     db = SessionLocal()
     try:
@@ -14,7 +16,7 @@ def get_db():
 
 router = APIRouter()
 
-
+# Get all groups
 @router.get("/")
 def get_groups(db: Session = Depends(get_db)):
     
@@ -23,6 +25,7 @@ def get_groups(db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="No groups found")
     return groups
 
+# Get a specific group by name
 @router.post("/create")
 def create_group(group: GroupCreate, email: str, db: Session = Depends(get_db)):
     if email is None:
@@ -50,7 +53,7 @@ def create_group(group: GroupCreate, email: str, db: Session = Depends(get_db)):
     
     return db_group
 
-
+# Join a group
 @router.post("/join")
 def join_group(group_name: str, email: str, db: Session = Depends(get_db)):
     if email is None:
@@ -78,6 +81,7 @@ def join_group(group_name: str, email: str, db: Session = Depends(get_db)):
     
     return {"message": "Joined group successfully"}
 
+# Get members of a group
 @router.get("/{group_name}")
 def get_members(group_name: str, db: Session = Depends(get_db)):
     group = db.query(Group).filter(Group.name == group_name).first()

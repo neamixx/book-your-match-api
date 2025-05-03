@@ -20,5 +20,5 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(recomanador.router)
-app.include_router(skyscanner.router)
 app.include_router(group.router)
+app.include_router(skyscanner.router)
