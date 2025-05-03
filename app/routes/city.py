@@ -14,7 +14,7 @@ def get_db():
         db.close()
 
 # Get all cities
-@router.get("/")
+@router.get("/all")
 def get_cities(db: Session = Depends(get_db)):
     cities = db.query(City).all()
     if not cities:

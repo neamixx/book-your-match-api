@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.database import engine
 from app import models
-from app.routes import users, skyscanner, recomanador, group, card
+from app.routes import users, skyscanner, recomanador, group, card, city
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
@@ -30,3 +30,4 @@ app.include_router(users.router)
 app.include_router(group.router)
 app.include_router(recomanador.router)
 app.include_router(skyscanner.router)
+app.include_router(city.router)
