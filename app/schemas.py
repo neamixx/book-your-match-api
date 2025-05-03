@@ -1,6 +1,7 @@
 from typing import List
 from pydantic import BaseModel
 from datetime import date
+from typing import List, Dict
 class UserBase(BaseModel):
     name: str
     email: str
@@ -63,3 +64,10 @@ class CardCreate(BaseModel):
 class CityRequest(BaseModel):
     city: str
  
+class CityCreate(BaseModel):
+    name: str
+    country: str
+    airport: str
+
+class EmbeddingRequest(BaseModel):
+    embedding: object
