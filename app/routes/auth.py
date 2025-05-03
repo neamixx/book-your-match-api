@@ -13,7 +13,7 @@ def get_db():
     finally:
         db.close()
 
-@router.post("/", response_model=User)
+@router.post("/register", response_model=User)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     # Check if the user already exists
     existing_user = db.query(models.User).filter(models.User.email == user.email).first()
