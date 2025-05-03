@@ -1,11 +1,19 @@
 import httpx
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from ..schemas import FlightSearchRequest, AutoSuggestRequest
 from datetime import datetime
 from ..database import SessionLocal
+from ..schemas import FlightSearchRequest, AutoSuggestRequest, CityRequest
+import pandas as pd
+from geopy.geocoders import Nominatim
+from geopy.extra.rate_limiter import RateLimiter
+
 router = APIRouter(prefix="/skyscanner", tags=["skyscanner"])
 
+df = pd.read_csv("iata_airports_and_locations_with_vibes.csv")
+
+geolocator = Nominatim(user_agent="iata-airports-app")
+reverse = RateLimiter(geolocator.reverse, min_delay_seconds=1)
 # Should be in a .env file
 # but for now, hardcoded
 API_KEY = "sh969210162413250384813708759185"
@@ -20,6 +28,7 @@ def get_db():
 
 # Try to get just the top three results
 # from the API
+'''
 @router.post("/search-flights")
 async def search_flights(request: FlightSearchRequest, db: Session = Depends(get_db)):
     payload = {
@@ -89,7 +98,7 @@ async def autosuggest_flights(request: AutoSuggestRequest):
             raise HTTPException(status_code=response.status_code, detail=f"HTTP error: {str(e)}")
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
-    
+'''  
 @router.post("/cheapest-flights")
 async def search_flights(request: FlightSearchRequest):
     payload = {
@@ -183,3 +192,30 @@ async def search_flights(request: FlightSearchRequest):
             raise HTTPException(status_code=response.status_code, detail=str(e))
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
+
+def obtain_country(lat, lon):
+    try:
+        location = reverse((lat, lon), language='en')
+        if location and "country" in location.raw["address"]:
+            return location.raw["address"]["country"]
+    except:
+        pass
+    return "Desconocido"
+
+def obtain_airports_city(df, ciudad):
+    resultados = df[df['en-GB'].str.contains(ciudad, case=False, na=False)][
+        ['IATA', 'en-GB', 'latitude', 'longitude']
+    ].copy()
+    resultados["country"] = resultados.apply(
+        lambda row: obtain_country(row["latitude"], row["longitude"]),
+        axis=1
+    )
+    return resultados
+
+@router.post("/airports")
+def get_airports(request: CityRequest):
+    result = obtain_airports_city(df, request.city)
+    return result.to_dict(orient='records')
+
+
+

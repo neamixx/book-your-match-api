@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional,Dict
 from sqlalchemy import Date, ForeignKey
 from datetime import date
 from sqlalchemy import Integer
@@ -6,6 +6,7 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import relationship
+from sqlalchemy import JSON
 
 class Base(DeclarativeBase):
     pass
@@ -30,6 +31,7 @@ class User(Base):
         "UserGroupAssociation", back_populates="user"
     )
     card_votes: Mapped[List["CardUserGroupAssociation"]] = relationship("CardUserGroupAssociation", back_populates="user")
+    embedding: Mapped[List[Dict[str,float]]] = mapped_column(JSON, nullable=True)
 
 
 
@@ -73,5 +75,6 @@ class City(Base):
     __tablename__ = "city"
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column()
-    latitude: Mapped[float] = mapped_column()
-    longitude: Mapped[float] = mapped_column()
+    country: Mapped[str] = mapped_column()
+    airport: Mapped[str] = mapped_column()
+    embedding: Mapped[List[Dict[str,float]]] = mapped_column(JSON, nullable=True)

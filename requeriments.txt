@@ -3,3 +3,7 @@ uvicorn
 sqlalchemy
 numpy
 scikit-learn
+geopy
+pandas
+ollama
+ujson
