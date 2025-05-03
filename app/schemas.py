@@ -1,6 +1,9 @@
 from typing import List
 from pydantic import BaseModel
 from datetime import date
+
+##USER
+
 class UserBase(BaseModel):
     name: str
     email: str
@@ -18,6 +21,14 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
+
+
+##CARDS
+
+class Choice(BaseModel):
+    user_email: str
+    card_id: int
+    agreeded: bool
 
 class FlightSearchRequest(BaseModel):
     market: str

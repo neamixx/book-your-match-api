@@ -11,10 +11,11 @@ from os import listdir
 from os.path import isfile, join
 from pathlib import Path
 from ..database import SessionLocal
-from ..schemas import *
-from ..models import Card
 
-router = APIRouter(prefix="/card", tags=["cards"])
+from ..models import *
+from ..schemas import Choice
+
+router = APIRouter(prefix="", tags=["cards"])
 
 tittles = [
     "Playa",
@@ -94,4 +95,23 @@ async def get_cards(db: Session = Depends(get_db)):
     if not cards:
         raise HTTPException(status_code=404, detail="No groups found")
     return cards
+
+
+async def adjust_user_embeding(user_embeding: object, card_embeding: object, user_id:int, db: Session = Depends(get_db)):
+    if user_embeding == None or card_embeding == None:
+        return None
+    else:
+        return user_embeding + card_embeding
     
+
+@router.post("/card")
+async def alter_algorithm(choice: Choice, db: Session = Depends(get_db)):
+    usr = db.query(User).filter(User.email == choice.user_email).first()
+    crd = db.query(Card).filter(Card.id == choice.card_id).first()
+    print(choice)
+    #adjusted_embeding = adjust_user_embeding(usr.id, crd.embeding)
+    #if adjusted_embeding != None: 
+    #    usr.embeding = adjusted_embeding
+    #    db.commit()
+    #else:
+    #    raise HTTPException(status_code=404, detail="User or Card not found")
