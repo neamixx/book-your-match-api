@@ -1,6 +1,8 @@
-from fastapi import APIRouter, File, UploadFile, Depends
+from fastapi import APIRouter, File, UploadFile, Depends, Form
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
+from fastapi.responses import FileResponse
 
 
 import random
@@ -9,8 +11,17 @@ from os import listdir
 from os.path import isfile, join
 from pathlib import Path
 from ..database import SessionLocal
+from ..schemas import *
+from ..models import Card
 
 router = APIRouter(prefix="/card", tags=["cards"])
+
+tittles = [
+    "Playa",
+    "Mojitos",
+    "Ron",
+    "Ski"
+]
 
 def get_db():
     db = SessionLocal()
@@ -31,19 +42,37 @@ def get_random_image():
     index = random.randrange(len(images) - 1)
     return images[index] 
 
-# Initialize the router
-router = APIRouter()
 
+@router.post("/create")
+def create_card(
+    name: str = Form(...),
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db)
+):
+    # Comprovem si ja existeix una targeta amb el mateix nom
+    existing_card = db.query(Card).filter(Card.image == file.filename).first()
+    if existing_card:
+        raise HTTPException(status_code=400, detail="Card already exists")
 
+    # Guardem el fitxer a la carpeta local d’imatges
+    image_path = os.path.abspath("./images")
+    os.makedirs(image_path, exist_ok=True)  # Ens assegurem que la carpeta existeix
+    file_location = f"{image_path}/{file.filename}"
+    
+    with open(file_location, "wb+") as file_object:
+        file_object.write(file.file.read())
+
+    # Creem la targeta a la base de dades
+    db_card = Card(name=name, image=file.filename)
+    db.add(db_card)
+    db.commit()
+    db.refresh(db_card)
+
+    return db_card
 
 # Define the GET endpoint for the /card route
 
-tittles = [
-    "Playa",
-    "Mojitos",
-    "Ron",
-    "Ski"
-]
+
 
 # Define the POST endpoint for the /card route
 @router.get("/card")

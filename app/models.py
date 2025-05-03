@@ -65,5 +65,13 @@ class CardUserGroupAssociation(Base):
 class Card(Base):
     __tablename__ = "card"
     id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column()
     image: Mapped[str] = mapped_column()
     votes: Mapped[List["CardUserGroupAssociation"]] = relationship("CardUserGroupAssociation", back_populates="card")
+
+class City(Base):
+    __tablename__ = "city"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column()
+    latitude: Mapped[float] = mapped_column()
+    longitude: Mapped[float] = mapped_column()
