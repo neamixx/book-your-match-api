@@ -6,6 +6,8 @@ from ..models import *
 
 router = APIRouter(prefix="/groups", tags=["groups"])
 
+# unirse per id
+# Data anada data tornada nª persones
 
 def get_db():
     db = SessionLocal()
@@ -40,7 +42,10 @@ def create_group(group: GroupCreate, email: str, db: Session = Depends(get_db)):
     db_group = Group(
         name=group.name,
         description=group.description,
-        admin_id=user.id 
+        admin_id=user.id,
+        data_ini=group.data_ini,
+        data_fi=group.data_fi,
+        num_mem=1
     )
 
     db_group.members.append(UserGroupAssociation(user_id=user.id))
@@ -53,7 +58,7 @@ def create_group(group: GroupCreate, email: str, db: Session = Depends(get_db)):
 
 # Join a group
 @router.post("/join")
-def join_group(group_name: str, email: str, db: Session = Depends(get_db)):
+def join_group(group_id: int, email: str, db: Session = Depends(get_db)):
     if email is None:
         raise HTTPException(status_code=401, detail="User not logged in")
 
@@ -61,7 +66,7 @@ def join_group(group_name: str, email: str, db: Session = Depends(get_db)):
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
 
-    group = db.query(Group).filter(Group.name == group_name).first()
+    group = db.query(Group).filter(Group.id == group_id).first()
     if group is None:
         raise HTTPException(status_code=404, detail="Group not found")
 
@@ -75,6 +80,7 @@ def join_group(group_name: str, email: str, db: Session = Depends(get_db)):
 
     association = UserGroupAssociation(user_id=user.id, group_id=group.id)
     db.add(association)
+    group.num_mem += 1
     db.commit()
     
     return {"message": "Joined group successfully"}

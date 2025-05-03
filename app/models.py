@@ -1,5 +1,6 @@
 from typing import List, Optional
-from sqlalchemy import ForeignKey
+from sqlalchemy import Date, ForeignKey
+from datetime import date
 from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -32,11 +33,13 @@ class Group(Base):
     __tablename__ = "group"
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(unique=True)
-    admin_id: Mapped[Optional[int]] = mapped_column(
+    admin_id: Mapped[int] = mapped_column(
         ForeignKey("user.id"), nullable=True
     )
-    description: Mapped[Optional[str]] = mapped_column()
-
+    description: Mapped[str] = mapped_column()
+    data_ini: Mapped[date] = mapped_column(Date(), nullable=False)
+    data_fi: Mapped[date] = mapped_column(Date(), nullable=False)
+    num_mem: Mapped[int] = mapped_column()
     members: Mapped[List[UserGroupAssociation]] = relationship(
         "UserGroupAssociation", back_populates="group"
     )
