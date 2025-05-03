@@ -5,6 +5,8 @@ from ..schemas import FlightSearchRequest, AutoSuggestRequest
 
 router = APIRouter(prefix="/skyscanner", tags=["skyscanner"])
 
+# Should be in a .env file
+# but for now, hardcoded
 API_KEY = "sh969210162413250384813708759185"
 BASE_URL = "https://partners.api.skyscanner.net/apiservices/v3/flights/live/search/create"
 
@@ -80,3 +82,61 @@ async def autosuggest_flights(request: AutoSuggestRequest):
             raise HTTPException(status_code=response.status_code, detail=f"HTTP error: {str(e)}")
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+    
+@router.post("/cheapest-flights")
+async def search_flights(request: FlightSearchRequest):
+    payload = {
+        "query": {
+            "market": request.market,
+            "locale": request.locale,
+            "currency": request.currency,
+            "query_legs": [
+                {
+                    "origin_place_id": {"iata": request.origin_iata},
+                    "destination_place_id": {"iata": request.destination_iata},
+                    "date": {
+                        "year": request.year,
+                        "month": request.month,
+                        "day": request.day
+                    }
+                }
+            ],
+            "adults": request.adults,
+            "cabin_class": request.cabin_class
+        }
+    }
+
+    headers = {
+        "x-api-key": API_KEY
+    }
+
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.post(BASE_URL, json=payload, headers=headers)
+            response.raise_for_status()
+            data = response.json()
+
+            # Procesar resultados
+            itineraries = data["content"]["results"]["itineraries"]
+            flights = []
+
+            for itinerary_id, itinerary in itineraries.items():
+                for option in itinerary.get("pricingOptions", []):
+                    price_milli = int(option["price"]["amount"])
+                    price = price_milli / 1000
+                    deep_link = option["items"][0]["deepLink"]
+                    flights.append({
+                        "id": itinerary_id,
+                        "price": price,
+                        "link": deep_link
+                    })
+
+            # Ordenar y devolver los 3 más baratos
+            cheapest = sorted(flights, key=lambda x: x["price"])[:3]
+
+            return {"cheapest_flights": cheapest}
+
+        except httpx.HTTPStatusError as e:
+            raise HTTPException(status_code=response.status_code, detail=str(e))
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
