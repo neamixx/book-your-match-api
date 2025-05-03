@@ -59,4 +59,7 @@ class GroupCreate(BaseModel):
 
 class CardCreate(BaseModel):
     name: str
+
+class CityRequest(BaseModel):
+    city: str
  
