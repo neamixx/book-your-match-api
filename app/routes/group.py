@@ -27,7 +27,7 @@ def get_groups(db: Session = Depends(get_db)):
 
 # Get a specific group by name
 @router.post("/create")
-def create_group(group: GroupCreate, email: str, db: Session = Depends(get_db)):
+def create_group(group: GroupCreate, email: str, ori: str, db: Session = Depends(get_db)):
     if email is None:
         raise HTTPException(status_code=401, detail="User not logged in")
 
@@ -45,10 +45,10 @@ def create_group(group: GroupCreate, email: str, db: Session = Depends(get_db)):
         admin_id=user.id,
         data_ini=group.data_ini,
         data_fi=group.data_fi,
-        num_mem=1
+        num_mem=1,
     )
 
-    db_group.members.append(UserGroupAssociation(user_id=user.id))
+    db_group.members.append(UserGroupAssociation(user_id=user.id, origen=ori ,state="pendent"))
     
     db.add(db_group)
     db.commit()
@@ -56,9 +56,35 @@ def create_group(group: GroupCreate, email: str, db: Session = Depends(get_db)):
     
     return db_group
 
+# Get estat relacio
+@router.get("/relation")
+def get_relation(email: str, group_id: int, db: Session = Depends(get_db)):
+    if not email:
+        raise HTTPException(status_code=400, detail="Missing email")
+
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    relation = db.query(UserGroupAssociation).filter_by(
+        user_id=user.id,
+        group_id=group_id
+    ).first()
+
+    if not relation:
+        return {"relation": "not_member"}
+
+    return {
+        "user_id": relation.user_id,
+        "group_id": relation.group_id,
+        "origen": relation.origen,  # ex: app, web, etc.
+        "state": relation.state  # ex: pendent, completat, etc.
+    }
+
+
 # Join a group
 @router.post("/join")
-def join_group(group_id: int, email: str, db: Session = Depends(get_db)):
+def join_group(group_id: int, email: str, ori: str, db: Session = Depends(get_db)):
     if email is None:
         raise HTTPException(status_code=401, detail="User not logged in")
 
@@ -78,7 +104,7 @@ def join_group(group_id: int, email: str, db: Session = Depends(get_db)):
     if existing_association:
         raise HTTPException(status_code=400, detail="Already a member of this group")
 
-    association = UserGroupAssociation(user_id=user.id, group_id=group.id)
+    association = UserGroupAssociation(user_id=user.id, group_id=group.id, origen= ori, state= "pendent")
     db.add(association)
     group.num_mem += 1
     db.commit()
@@ -110,3 +136,4 @@ def get_user_groups(email: str, db: Session = Depends(get_db)):
     ).all()
     
     return groups
+
