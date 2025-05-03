@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Cookie
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from .. import models, schemas
 from ..schemas import *
@@ -13,7 +14,7 @@ def get_db():
     finally:
         db.close()
 
-@router.post("/register", response_model=User)
+@router.post("/register")
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     # Check if the user already exists
     existing_user = db.query(models.User).filter(models.User.email == user.email).first()
@@ -28,15 +29,16 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 
 
 @router.post("/login")
-def login(user: UserLogin, db: Session = Depends(get_db)):
-    # Check if the user exists
+def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
-    # Check if the password is correct
     if db_user.password != user.password:
         raise HTTPException(status_code=400, detail="Invalid credentials")
-    return {"message": "Login successful"}
+    
+    response = JSONResponse(content={"message": "Login successful"})
+    response.set_cookie(key="email", value=user.email)
+    return response
 
 
 @router.get("/users/", response_model=list[User])
@@ -45,3 +47,14 @@ def get_users(db: Session = Depends(get_db)):
     users = db.query(models.User).all()
     return users
 
+@router.get("/me")
+async def read_user(email: str = Cookie(None)):
+    if email is None:
+        raise HTTPException(status_code=401, detail="User not logged in")
+    
+    return {"email": email}
+
+
+@router.post("/logout")
+async def logout():
+    return JSONResponse(content={"message": "Logout successful"}, cookies={"email": ""})

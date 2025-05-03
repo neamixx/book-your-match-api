@@ -1,10 +1,42 @@
-from sqlalchemy import Column, Integer, String
-from .database import Base
+from typing import List, Optional
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import relationship
+
+class Base(DeclarativeBase):
+    pass
+class UserGroupAssociation(Base):
+    __tablename__ = "user_group_association"
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), primary_key=True)
+    group_id: Mapped[int] = mapped_column(ForeignKey("group.id"), primary_key=True)
+
+    group: Mapped["Group"] = relationship("Group", back_populates="members")
+    user: Mapped["User"] = relationship("User", back_populates="groups")
+
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = "user"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column()
+    email: Mapped[str] = mapped_column(unique=True)
+    password: Mapped[str] = mapped_column()
+    groups: Mapped[List[UserGroupAssociation]] = relationship(
+        "UserGroupAssociation", back_populates="user"
+    )
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    email = Column(String, unique=True, index=True)
-    password = Column(String, index = True)
+
+class Group(Base):
+    __tablename__ = "group"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(unique=True)
+    admin_id: Mapped[Optional[int]] = mapped_column(
+        ForeignKey("user.id"), nullable=True
+    )
+    description: Mapped[Optional[str]] = mapped_column()
+
+    members: Mapped[List[UserGroupAssociation]] = relationship(
+        "UserGroupAssociation", back_populates="group"
+    )

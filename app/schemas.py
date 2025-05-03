@@ -1,3 +1,4 @@
+from typing import List
 from pydantic import BaseModel
 
 class UserBase(BaseModel):
@@ -37,3 +38,19 @@ class AutoSuggestRequest(BaseModel):
     includedEntityTypes: list
     limit: int
     isDestination: bool
+
+class UserInGroup(BaseModel):
+    id: int
+    name: str
+    email: str
+    class Config:
+        orm_mode = True
+class GroupS(BaseModel):
+    id: int
+    name: str
+    description: str
+    members: List[UserInGroup]
+    
+class GroupCreate(BaseModel):
+    name: str
+    description: str    
