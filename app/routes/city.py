@@ -82,8 +82,8 @@ async def update_embedding(city_name: str, request: EmbeddingRequest, db: Sessio
                 city_items[request_item] = request.embedding[request_item]
         city.embedding = city_items
         print(city.embedding)
-        db.query(City).filter(City.name == city_name).update({"embedding": city.embedding})
-        db.commit()
-        db.refresh(city)
+    db.query(City).filter(City.name == city_name).update({"embedding": city.embedding})
+    db.commit()
+    db.refresh(city)
 
     return {"message": f"Embedding updated for city {city_name}"}

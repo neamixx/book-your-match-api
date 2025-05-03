@@ -31,6 +31,7 @@ class User(Base):
         "UserGroupAssociation", back_populates="user"
     )
     card_votes: Mapped[List["CardUserGroupAssociation"]] = relationship("CardUserGroupAssociation", back_populates="user")
+    embedding: Mapped[List[Dict[str,float]]] = mapped_column(JSON, nullable=True)
 
 
 
