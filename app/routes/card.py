@@ -1,13 +1,23 @@
-from fastapi import APIRouter, File, UploadFile
+from fastapi import APIRouter, File, UploadFile, Depends
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
+
 
 import random
 import os
 from os import listdir
 from os.path import isfile, join
 from pathlib import Path
+from ..database import SessionLocal
 
 router = APIRouter(prefix="/card", tags=["cards"])
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 def get_random_image():
     image_path = os.path.abspath("./images")
@@ -46,3 +56,13 @@ async def get_card():
     index = random.randrange(len(tittles) - 1)
     
     return {"id": index, "tittle": tittles[index], "image": f"/static/{image_path}" }
+
+@router.get("/cards")
+async def get_cards(db: Session = Depends(get_db)):
+    # Here you would typically process the card data (e.g., save to a database)
+    #image_path = Path(get_random_image())
+    cards = db.query(Card).all()
+    if not cards:
+        raise HTTPException(status_code=404, detail="No groups found")
+    return cards
+    

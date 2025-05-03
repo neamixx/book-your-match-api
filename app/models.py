@@ -40,3 +40,8 @@ class Group(Base):
     members: Mapped[List[UserGroupAssociation]] = relationship(
         "UserGroupAssociation", back_populates="group"
     )
+
+class Card(Base):
+    __tablename__ = "card"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    image: Mapped[str] = mapped_column()
