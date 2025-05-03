@@ -1,10 +1,22 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from typing import Dict, List
 import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
+from ..database import SessionLocal
+from sqlalchemy.orm import Session
+from ..models import *
+from ..schemas import *
+
 
 router = APIRouter()
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 # Tags en ordre
 TAGS = ["natura", "urbà", "platja", "història", "cultura", "gastronomia", "aventura", "relax", "tecnologia", "clima càlid"]
@@ -25,19 +37,33 @@ class PreferenciesUsuari(BaseModel):
     preferencies: Dict[str, float]
 
 @router.post("/recomanar")
-def recomanar(usuaris: List[PreferenciesUsuari]):
-    vectors = []
+def recomanar(input: GroupInput, db: Session = Depends(get_db)):
+    # Obtenir usuaris del grup
+    usuaris = db.query(User).filter(User.group_id == input.group_id).all()
 
-    for u in usuaris:
-        v = [u.preferencies.get(tag, 0) for tag in TAGS]
-        vectors.append(v)
+    if not usuaris:
+        raise HTTPException(status_code=404, detail="No s'han trobat usuaris per aquest grup.")
+
+    # Agafar els emmbeddings de cada usuari
+    vectors = []
+    for user in usuaris:
+       user_vector = [user.preferences.get(tag, 0) for tag in TAGS]
+       vectors.append(user_vector)
 
     vector_global = np.mean(vectors, axis=0)
 
-    resultats = []
-    for ciutat, v in CIUTATS.items():
-        score = cosine_similarity([vector_global], [v])[0][0]
-        resultats.append({"ciutat": ciutat, "score": round(score, 4)})
+    # Obtenir ciutats de la base de dades
+    ciutats = db.query(City).all()
 
-    resultats.sort(key=lambda x: x["score"], reverse=True)
+    if not ciutats:
+        raise HTTPException(status_code=404, detail="No s'han trobat ciutats a la base de dades.")
+
+    # Calcular distància Manhattan i ordenar
+    resultats = []
+    for ciutat in ciutats:
+        ciutat_vector = [ciutat.vector.get(tag, 0) for tag in TAGS]
+        distancia = np.sum(np.abs(np.array(vector_global) - np.array(ciutat_vector)))
+        resultats.append({"ciutat": ciutat.nom, "distancia": round(distancia, 4)})
+
+    resultats.sort(key=lambda x: x["distancia"])
     return resultats[0]

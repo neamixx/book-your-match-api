@@ -59,4 +59,8 @@ class GroupCreate(BaseModel):
 
 class CardCreate(BaseModel):
     name: str
+
+class GroupInput(BaseModel):
+    group_id: int
+
  
