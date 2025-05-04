@@ -1,5 +1,5 @@
 {
-    "embedded":{
+    "embedding":{
         "temperature": 0.5,
         "demography": 0.5,
         "night-life": 0.5,
@@ -23,7 +23,7 @@ price: 0 cheap life style, 1 expensive live style in the zone
 
 Cairo:
 {
-    "embedded": {
+    "embedding": {
       "temperature": 0.9,
       "demography": 0.7,
       "night-life": 0.6,
@@ -37,7 +37,7 @@ Cairo:
 
 Tokio:
 {
-    "embedded": {
+    "embedding": {
       "temperature": 0.6,
       "demography": 1.0,
       "night-life": 0.9,
@@ -51,7 +51,7 @@ Tokio:
 
 Barcelona:
 {
-    "embedded": {
+    "embedding": {
       "temperature": 0.7,
       "demography": 0.8,
       "night-life": 0.9,
@@ -65,7 +65,7 @@ Barcelona:
 
 Boston
 {
-    "embedded": {
+    "embedding": {
       "temperature": 0.4,
       "demography": 0.7,
       "night-life": 0.7,
@@ -78,7 +78,7 @@ Boston
 
 Rome
 {
-    "embedded": {
+    "embedding": {
       "temperature": 0.7,
       "demography": 0.8,
       "night-life": 0.8,
@@ -92,7 +92,7 @@ Rome
 
 Sydney
 {
-    "embedded": {
+    "embedding": {
       "temperature": 0.8,
       "demography": 0.7,
       "night-life": 0.8,
@@ -106,7 +106,7 @@ Sydney
 
 Rio de Janeiro 
 {
-    "embedded": {
+    "embedding": {
       "temperature": 0.9,
       "demography": 0.8,
       "night-life": 1.0,
@@ -120,7 +120,7 @@ Rio de Janeiro
 
 Mexico City
 {
-    "embedded": {
+    "embedding": {
       "temperature": 0.7,
       "demography": 0.9,
       "night-life": 0.8,
@@ -134,7 +134,7 @@ Mexico City
 
 Daocheng Yading
 {
-    "embedded": {
+    "embedding": {
       "temperature": 0.3,
       "demography": 0.2,
       "night-life": 0.1,
@@ -148,7 +148,7 @@ Daocheng Yading
 
 Oslo 
 {
-    "embedded": {
+    "embedding": {
       "temperature": 0.2,
       "demography": 0.6,
       "night-life": 0.6,
@@ -162,7 +162,7 @@ Oslo
 
 Dubai
 {
-    "embedded": {
+    "embedding": {
       "temperature": 1.0,
       "demography": 0.8,
       "night-life": 0.9,
@@ -175,7 +175,7 @@ Dubai
 
 Singapoure 
 {
-    "embedded": {
+    "embedding": {
       "temperature": 0.9,
       "demography": 0.9,
       "night-life": 0.8,
@@ -189,7 +189,7 @@ Singapoure
 
 Helsinki 
 {
-    "embedded": {
+    "embedding": {
       "temperature": 0.2,
       "demography": 0.5,
       "night-life": 0.5,
@@ -202,7 +202,7 @@ Helsinki
 
 Toronto
 {
-    "embedded": {
+    "embedding": {
       "temperature": 0.4,
       "demography": 0.8,
       "night-life": 0.7,
