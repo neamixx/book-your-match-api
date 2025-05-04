@@ -12,8 +12,8 @@ class Base(DeclarativeBase):
     pass
 
 class GroupState(py_enum.Enum):
-    QUEUE = "Queue"
-    READY = "Ready"
+    QUEUE = "QUEUE"
+    READY = "READY"
 class UserGroupAssociation(Base):
     __tablename__ = "user_group_association"
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), primary_key=True)
