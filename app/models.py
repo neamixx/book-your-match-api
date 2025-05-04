@@ -70,6 +70,8 @@ class Card(Base):
     name: Mapped[str] = mapped_column()
     image: Mapped[str] = mapped_column()
     votes: Mapped[List["CardUserGroupAssociation"]] = relationship("CardUserGroupAssociation", back_populates="card")
+    embedding: Mapped[List[Dict[str,float]]] = mapped_column(JSON, nullable=True)
+
 
 class City(Base):
     __tablename__ = "city"

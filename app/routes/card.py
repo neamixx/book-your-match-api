@@ -13,7 +13,7 @@ from pathlib import Path
 from ..database import SessionLocal
 
 from ..models import *
-from ..schemas import Choice
+from ..schemas import Choice, EmbeddingRequest
 
 router = APIRouter(prefix="", tags=["cards"])
 
@@ -115,3 +115,33 @@ async def alter_algorithm(choice: Choice, db: Session = Depends(get_db)):
     #    db.commit()
     #else:
     #    raise HTTPException(status_code=404, detail="User or Card not found")
+
+
+@router.post("/{id}/embedding")
+async def update_embedding(id: int, request: EmbeddingRequest, db: Session = Depends(get_db)):
+    card = db.query(Card).filter(Card.id == id).first()
+    
+    if not card:
+        raise HTTPException(status_code=404, detail="Card not found")
+
+    if card.embedding is None:
+        card.embedding = request.embedding
+    else:
+        print(card.embedding)
+        print(request.embedding)
+        
+        for request_item in request.embedding:
+            card_items = card.embedding
+            if request_item in card_items:
+                print("Updating existing embedding")
+                card_items[request_item] = request.embedding[request_item]
+            else:
+                print("Adding new embedding")
+                card_items[request_item] = request.embedding[request_item]
+        card.embedding = card_items
+        print(card.embedding)
+    db.query(Card).filter(Card.id == id).update({"embedding": card.embedding})
+    db.commit()
+    db.refresh(card)
+
+    return {"message": f"Embedding updated for card {id}"}
