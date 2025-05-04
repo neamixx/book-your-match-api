@@ -21,16 +21,8 @@ class User(UserBase):
         orm_mode = True
 
 class FlightSearchRequest(BaseModel):
-    market: str
-    locale: str
-    currency: str
-    origin_iata: str
-    destination_iata: str
-    year: int
-    month: int
-    day: int
-    adults: int
-    cabin_class: str
+    group_id: int
+    email: str
 
 class AutoSuggestRequest(BaseModel):
     market: str
