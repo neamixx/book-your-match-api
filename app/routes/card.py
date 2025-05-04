@@ -64,7 +64,15 @@ def create_card(
         file_object.write(file.file.read())
 
     # Creem la targeta a la base de dades
-    db_card = Card(name=name, image=file.filename)
+    db_card = Card(name=name, image=file.filename, embedding={
+        "temperature": 0.5,
+        "demography": 0.5,
+        "night-life": 0.5,
+        "beach": 0.5,
+        "price": 0.5,
+        "mountain": 0.5,
+        "nature": 0.5
+    })
     db.add(db_card)
     db.commit()
     db.refresh(db_card)

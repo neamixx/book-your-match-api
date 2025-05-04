@@ -23,7 +23,16 @@ def create_city(city: CityCreate, db: Session = Depends(get_db)):
     new_city = City(
         name=city.name,
         country=city.country,
-        airport=city.airport
+        airport=city.airport,
+        embedding={
+            "temperature": 0.5,
+            "demography": 0.5,
+            "night-life": 0.5,
+            "beach": 0.5,
+            "price": 0.5,
+            "mountain": 0.5,
+            "nature": 0.5
+        }
     )
     
     db.add(new_city)

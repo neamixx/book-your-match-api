@@ -32,7 +32,7 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
             "beach": 0.5,
             "price": 0.5,
             "mountain": 0.5,
-            "nature": 0.5,
+            "nature": 0.5
         }
     )
     db.add(db_user)
