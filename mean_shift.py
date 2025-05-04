@@ -9,7 +9,7 @@ m = 100 # Number of points
 
 # === Step 1: Generate Random Data ===
 # Optional: Use make_blobs to simulate clusterable data
-X, _ = make_blobs(n_samples=m, centers=3, n_features=n, random_state=42)
+X, _ = make_blobs(n_samples=m, centers=1, n_features=n, random_state=42)
 
 # === Step 2: Apply Mean Shift Clustering ===
 mean_shift = MeanShift()
