@@ -21,7 +21,20 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     # Create a new user
-    db_user = models.User(name=user.name, email=user.email, password=user.password)
+    db_user = models.User(
+        name=user.name, 
+        email=user.email, 
+        password=user.password, 
+        embedding={
+            "temperature": 0.5,
+            "demography": 0.5,
+            "night-life": 0.5,
+            "beach": 0.5,
+            "price": 0.5,
+            "mountain": 0.5,
+            "nature": 0.5,
+        }
+    )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
