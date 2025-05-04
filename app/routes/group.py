@@ -46,6 +46,7 @@ def create_group(group: GroupCreate, email: str, ori: str, db: Session = Depends
         data_ini=group.data_ini,
         data_fi=group.data_fi,
         num_mem=group.num_mem,
+        state=GroupState.QUEUE
     )
 
     db_group.members.append(UserGroupAssociation(user_id=user.id, origen=ori ,state="pendent"))
@@ -110,7 +111,7 @@ def join_group(group_id: int, email: str, ori: str, db: Session = Depends(get_db
     db.commit()
     db_group = db.query(UserGroupAssociation).filter(UserGroupAssociation.group_id == group_id).count()
     if db_group == group.num_mem:
-        db.query(Group).filter(Group.id == group_id).update({"state": "Ready"})
+        db.query(Group).filter(Group.id == group_id).update({"state": GroupState.READY})
         db.commit()
     return {"message": "Joined group successfully"}
 
