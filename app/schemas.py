@@ -75,6 +75,7 @@ class CityCreate(BaseModel):
     name: str
     country: str
     airport: str
+    image_url: str
 
 class EmbeddingRequest(BaseModel):
     embedding: object

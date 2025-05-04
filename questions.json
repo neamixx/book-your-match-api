@@ -1,0 +1,246 @@
+{
+    "activities": {
+      "Beach": {
+        "embedded": {
+          "temperature": 0.8,
+          "demography": 0.6,
+          "night-life": 0.7,
+          "nature": 0.7,
+          "beach": 1.0,
+          "mountain": -0.2,
+          "price": 0.6
+        }
+      },
+      "Hackathon": {
+        "embedded": {
+          "temperature": 0.5,
+          "demography": 0.9,
+          "night-life": 0.4,
+          "nature": -0.1,
+          "beach": 0.3,
+          "mountain": -0.1,
+          "price": 0.4
+        }
+      },
+      "Skiing": {
+        "embedded": {
+          "temperature": -0.1,
+          "demography": 0.4,
+          "night-life": 0.5,
+          "nature": 0.9,
+          "beach": -0.3,
+          "mountain": 1.0,
+          "price": 0.8
+        }
+      },
+      "Partying": {
+        "embedded": {
+          "temperature": 0.7,
+          "demography": 0.9,
+          "night-life": 1.0,
+          "nature": 0.3,
+          "beach": 0.6,
+          "mountain": -0.1,
+          "price": 0.7
+        }
+      },
+      "Culture": {
+        "embedded": {
+          "temperature": 0.6,
+          "demography": 0.8,
+          "night-life": 0.6,
+          "nature": 0.5,
+          "beach": 0.4,
+          "mountain": 0.3,
+          "price": 0.7
+        }
+      },
+      "Museums": {
+        "embedded": {
+          "temperature": 0.5,
+          "demography": 0.8,
+          "night-life": 0.3,
+          "nature": -0.1,
+          "beach": -0.1,
+          "mountain": -0.2,
+          "price": 0.6
+        }
+      },
+      "Adventure Sports": {
+        "embedded": {
+          "temperature": 0.7,
+          "demography": 0.5,
+          "night-life": 0.5,
+          "nature": 1.0,
+          "beach": 0.6,
+          "mountain": 0.8,
+          "price": 0.6
+        }
+      },
+      "Hiking": {
+        "embedded": {
+          "temperature": 0.6,
+          "demography": 0.4,
+          "night-life": -0.1,
+          "nature": 1.0,
+          "beach": 0.3,
+          "mountain": 0.9,
+          "price": 0.3
+        }
+      },
+      "Food Tasting": {
+        "embedded": {
+          "temperature": 0.6,
+          "demography": 0.8,
+          "night-life": 0.6,
+          "nature": 0.3,
+          "beach": 0.4,
+          "mountain": -0.1,
+          "price": 0.7
+        }
+      },
+      "Street Art": {
+        "embedded": {
+          "temperature": 0.7,
+          "demography": 0.8,
+          "night-life": 0.7,
+          "nature": -0.1,
+          "beach": 0.3,
+          "mountain": -0.1,
+          "price": 0.5
+        }
+      },
+      "Historical Tours": {
+        "embedded": {
+          "temperature": 0.5,
+          "demography": 0.7,
+          "night-life": 0.3,
+          "nature": 0.5,
+          "beach": -0.1,
+          "mountain": 0.3,
+          "price": 0.6
+        }
+      },
+      "Snorkeling": {
+        "embedded": {
+          "temperature": 0.9,
+          "demography": 0.5,
+          "night-life": 0.6,
+          "nature": 0.8,
+          "beach": 1.0,
+          "mountain": -0.2,
+          "price": 0.6
+        }
+      },
+      "Camping": {
+        "embedded": {
+          "temperature": 0.5,
+          "demography": 0.3,
+          "night-life": -0.1,
+          "nature": 1.0,
+          "beach": 0.4,
+          "mountain": 0.8,
+          "price": -0.1
+        }
+      },
+      "Luxury Shopping": {
+        "embedded": {
+          "temperature": 0.6,
+          "demography": 1.0,
+          "night-life": 0.7,
+          "nature": -0.2,
+          "beach": 0.3,
+          "mountain": -0.2,
+          "price": 1.0
+        }
+      },
+      "Photography": {
+        "embedded": {
+          "temperature": 0.6,
+          "demography": 0.6,
+          "night-life": 0.4,
+          "nature": 0.5,
+          "beach": 0.5,
+          "mountain": 0.7,
+          "price": 0.5
+        }
+      },
+      "Festival Going": {
+        "embedded": {
+          "temperature": 0.7,
+          "demography": 0.8,
+          "night-life": 0.9,
+          "nature": 0.4,
+          "beach": 0.4,
+          "mountain": -0.1,
+          "price": 0.6
+        }
+      },
+      "Wine Tasting": {
+        "embedded": {
+          "temperature": 0.6,
+          "demography": 0.5,
+          "night-life": 0.4,
+          "nature": 0.0,
+          "beach": 0.3,
+          "mountain": 0.5,
+          "price": 0.7
+        }
+      },
+      "Cycling": {
+        "embedded": {
+          "temperature": 0.5,
+          "demography": 0.6,
+          "night-life": 0.3,
+          "nature": 0.8,
+          "beach": 0.4,
+          "mountain": 0.6,
+          "price": 0.4
+        }
+      },
+      "Boat Tours": {
+        "embedded": {
+          "temperature": 0.8,
+          "demography": 0.6,
+          "night-life": 0.6,
+          "nature": 0.7,
+          "beach": 0.9,
+          "mountain": -0.1,
+          "price": 0.7
+        }
+      },
+      "Local Markets": {
+        "embedded": {
+          "temperature": 0.6,
+          "demography": 0.7,
+          "night-life": 0.5,
+          "nature": 0.4,
+          "beach": 0.3,
+          "mountain": -0.1,
+          "price": 0.3
+        }
+      },
+      "Wildlife Watching": {
+        "embedded": {
+          "temperature": 0.7,
+          "demography": 0.3,
+          "night-life": -0.1,
+          "nature": 1.0,
+          "beach": 0.4,
+          "mountain": 0.6,
+          "price": 0.4
+        }
+      },
+      "Spa & Wellness": {
+        "embedded": {
+          "temperature": 0.7,
+          "demography": 0.6,
+          "night-life": 0.3,
+          "nature": 0.0,
+          "beach": 0.5,
+          "mountain": 0.3,
+          "price": 0.8
+        }
+      }
+    }
+  }

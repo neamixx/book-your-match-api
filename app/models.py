@@ -80,6 +80,7 @@ class Card(Base):
 class City(Base):
     __tablename__ = "city"
     id: Mapped[int] = mapped_column(primary_key=True)
+    image_url: Mapped[str] = mapped_column()
     name: Mapped[str] = mapped_column()
     country: Mapped[str] = mapped_column()
     airport: Mapped[str] = mapped_column()
