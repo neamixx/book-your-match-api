@@ -59,6 +59,7 @@ def get_city(name: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="City not found")
     return city
 
+'''
 @router.post("/{city_name}/embedding")
 async def update_embedding(city_name: str, request: EmbeddingRequest, db: Session = Depends(get_db)):
     city = db.query(City).filter(City.name == city_name).first()
@@ -82,6 +83,32 @@ async def update_embedding(city_name: str, request: EmbeddingRequest, db: Sessio
                 city_items[request_item] = request.embedding[request_item]
         city.embedding = city_items
         print(city.embedding)
+    db.query(City).filter(City.name == city_name).update({"embedding": city.embedding})
+    db.commit()
+    db.refresh(city)
+
+    return {"message": f"Embedding updated for city {city_name}"}
+'''
+
+@router.post("/{city_name}/embedding")
+async def update_embedding(city_name: str, request: EmbeddingRequest, db: Session = Depends(get_db)):
+    city = db.query(City).filter(City.name == city_name).first()
+    
+    if not city:
+        raise HTTPException(status_code=404, detail="City not found")
+
+    if city.embedding is None:
+        city.embedding = request.embedding
+    else:
+        for request_item in request.embedding:
+            city_items = city.embedding
+            if request_item in city_items:
+                city_items[request_item] = request.embedding[request_item]
+            else:
+                city_items[request_item] = request.embedding[request_item]
+        city.embedding = city_items
+    
+    city.embedding = dict(sorted(city_items.items()))
     db.query(City).filter(City.name == city_name).update({"embedding": city.embedding})
     db.commit()
     db.refresh(city)
