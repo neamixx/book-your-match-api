@@ -98,10 +98,18 @@ async def get_cards(db: Session = Depends(get_db)):
 
 
 async def adjust_user_embeding(user_embeding: object, card_embeding: object, user_id:int, db: Session = Depends(get_db)):
+    adjusted = {}
+    adjusted.copy(user_embeding)
+    print(adjusted)
     if user_embeding == None or card_embeding == None:
         return None
     else:
-        return user_embeding + card_embeding
+        for card_key, card_value in card_embeding:
+            if card_key in user_embeding:
+                k = 0.15
+                adjusted[card_key] = max(min( user_embeding + card_embeding * k, 1.0), 0.0)
+        print(adjusted)
+        return adjusted
     
 
 @router.post("/card")
@@ -109,9 +117,9 @@ async def alter_algorithm(choice: Choice, db: Session = Depends(get_db)):
     usr = db.query(User).filter(User.email == choice.user_email).first()
     crd = db.query(Card).filter(Card.id == choice.card_id).first()
     print(choice)
-    #adjusted_embeding = adjust_user_embeding(usr.id, crd.embeding)
-    #if adjusted_embeding != None: 
-    #    usr.embeding = adjusted_embeding
-    #    db.commit()
-    #else:
-    #    raise HTTPException(status_code=404, detail="User or Card not found")
+    adjusted_embeding = adjust_user_embeding(usr.id, crd.embeding)
+    if adjusted_embeding != None: 
+        usr.embeding = adjusted_embeding
+        db.commit()
+    else:
+        raise HTTPException(status_code=404, detail="User or Card not found")
