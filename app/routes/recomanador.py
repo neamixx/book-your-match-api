@@ -46,7 +46,7 @@ def recomanar(input: GroupInput, db: Session = Depends(get_db)):
 
     # Obtenir ciutats de la base de dades
     ciutats = db.query(City).all()
-
+    print(ciutats)
     if not ciutats:
         raise HTTPException(status_code=404, detail="No s'han trobat ciutats a la base de dades.")
 
