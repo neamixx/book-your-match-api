@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.database import engine
 from app import models
-from app.routes import users, skyscanner, recomanador, group, card, city, ollama
+from app.routes import users, skyscanner, recomanador, group, card, city
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
