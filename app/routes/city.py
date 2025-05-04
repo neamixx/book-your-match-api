@@ -24,6 +24,7 @@ def create_city(city: CityCreate, db: Session = Depends(get_db)):
         name=city.name,
         country=city.country,
         airport=city.airport,
+        image=city.image_url,
         embedding={
             "temperature": 0.5,
             "demography": 0.5,
