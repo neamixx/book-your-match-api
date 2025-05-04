@@ -85,15 +85,17 @@ def create_card(
 
 # Define the POST endpoint for the /card route
 @router.get("/card")
-async def get_card():
+async def get_card(db: Session = Depends(get_db)):
     # Here you would typically process the card data (e.g., save to a database)
+    id = random.randrange(0, 20)
+    card = db.query(Card).filter(Card.id == id).first()
     image_path = Path(get_random_image())
     if image_path == 'error':
         return {"error in loading image"}
 
     index = random.randrange(len(tittles) - 1)
     
-    return {"id": index, "tittle": tittles[index], "image": f"/static/{image_path}" }
+    return {"id": id, "tittle": card.name, "image": f"/static/{card.image}" }
 
 @router.get("/cards")
 async def get_cards(db: Session = Depends(get_db)):
@@ -105,17 +107,19 @@ async def get_cards(db: Session = Depends(get_db)):
     return cards
 
 
-async def adjust_user_embeding(user_embeding: object, card_embeding: object, user_id:int, db: Session = Depends(get_db)):
-    adjusted = {}
-    adjusted.copy(user_embeding)
+def adjust_user_embedding(user_embedding: object, card_embedding: object, agreeded: bool):
+    adjusted = user_embedding.copy()
     print(adjusted)
-    if user_embeding == None or card_embeding == None:
+    if user_embedding == None or card_embedding == None:
         return None
     else:
-        for card_key, card_value in card_embeding:
-            if card_key in user_embeding:
+        for card_key, card_value in card_embedding.items():
+            if card_key in user_embedding:
                 k = 0.15
-                adjusted[card_key] = max(min( user_embeding + card_embeding * k, 1.0), 0.0)
+                if not agreeded:
+                    k = -k                    
+                adjusted[card_key] = max(min( user_embedding[card_key] + card_value * k, 1.0), 0.0)
+                
         print(adjusted)
         return adjusted
     
@@ -124,10 +128,10 @@ async def adjust_user_embeding(user_embeding: object, card_embeding: object, use
 async def alter_algorithm(choice: Choice, db: Session = Depends(get_db)):
     usr = db.query(User).filter(User.email == choice.user_email).first()
     crd = db.query(Card).filter(Card.id == choice.card_id).first()
-    print(choice)
-    adjusted_embeding = adjust_user_embeding(usr.id, crd.embeding)
-    if adjusted_embeding != None: 
-        usr.embeding = adjusted_embeding
+    print(crd.image)
+    adjusted_embedding = adjust_user_embedding(usr.embedding, crd.embedding, choice.agreeded)
+    if adjusted_embedding != None: 
+        usr.embedding = adjusted_embedding
         db.commit()
     else:
         raise HTTPException(status_code=404, detail="User or Card not found")
