@@ -141,3 +141,11 @@ def get_user_groups(email: str, db: Session = Depends(get_db)):
     
     return groups
 
+#Get the group by id
+@router.get("/group/{id}")
+def get_group(id: int, db: Session = Depends(get_db)):
+    group = db.query(Group).filter(Group.id == id).first()
+    if not group:
+        raise HTTPException(status_code=404, detail="Group not found")
+    
+    return group

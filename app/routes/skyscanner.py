@@ -206,6 +206,8 @@ async def search_flights(request: FlightSearchRequest):
                         formatted_time_arrival = dte_a.strftime("%I:%M %p")
 
                         flights.append({
+                            "city": ciutat['ciutat'],
+                            "image_path": f"/static/{ciutat['ciutat']}.jpg",
                             "id": itinerary_id,
                             "price": price,
                             "link": deep_link,
@@ -219,7 +221,7 @@ async def search_flights(request: FlightSearchRequest):
 
                 # Ordenar y devolver los 3 más baratos
                 cheapest = sorted(flights, key=lambda x: x["price"])[:1]
-
+                print(cheapest)
                 return {"cheapest_flights": cheapest}
 
             except httpx.HTTPStatusError as e:

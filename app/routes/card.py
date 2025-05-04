@@ -87,7 +87,7 @@ def create_card(
 @router.get("/card")
 async def get_card(db: Session = Depends(get_db)):
     # Here you would typically process the card data (e.g., save to a database)
-    id = random.randrange(0, 20)
+    id = random.randrange(0, 22)
     card = db.query(Card).filter(Card.id == id).first()
     image_path = Path(get_random_image())
     if image_path == 'error':
