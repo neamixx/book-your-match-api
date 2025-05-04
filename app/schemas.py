@@ -60,6 +60,7 @@ class GroupCreate(BaseModel):
     description: str
     data_ini: date
     data_fi: date
+    num_mem: int
 
 class CardCreate(BaseModel):
     name: str
