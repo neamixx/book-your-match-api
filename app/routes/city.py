@@ -59,6 +59,7 @@ def get_city(name: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="City not found")
     return city
 
+
 @router.post("/{city_name}/embedding")
 async def update_embedding(city_name: str, request: EmbeddingRequest, db: Session = Depends(get_db)):
     city = db.query(City).filter(City.name == city_name).first()
