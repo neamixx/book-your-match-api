@@ -45,7 +45,8 @@ def create_group(group: GroupCreate, email: str, ori: str, db: Session = Depends
         admin_id=user.id,
         data_ini=group.data_ini,
         data_fi=group.data_fi,
-        num_mem=1,
+        num_mem=group.num_mem,
+        state=GroupState.QUEUE
     )
 
     db_group.members.append(UserGroupAssociation(user_id=user.id, origen=ori ,state="pendent"))
@@ -102,13 +103,16 @@ def join_group(group_id: int, email: str, ori: str, db: Session = Depends(get_db
     ).first()
 
     if existing_association:
-        raise HTTPException(status_code=400, detail="Already a member of this group")
 
+        raise HTTPException(status_code=400, detail="Already a member of this group")
+    
     association = UserGroupAssociation(user_id=user.id, group_id=group.id, origen= ori, state= "pendent")
     db.add(association)
-    group.num_mem += 1
     db.commit()
-    
+    db_group = db.query(UserGroupAssociation).filter(UserGroupAssociation.group_id == group_id).count()
+    if db_group == group.num_mem:
+        db.query(Group).filter(Group.id == group_id).update({"state": GroupState.READY})
+        db.commit()
     return {"message": "Joined group successfully"}
 
 # Get members of a group

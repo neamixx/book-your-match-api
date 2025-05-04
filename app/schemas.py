@@ -60,6 +60,7 @@ class GroupCreate(BaseModel):
     description: str
     data_ini: date
     data_fi: date
+    num_mem: int
 
 class CardCreate(BaseModel):
     name: str
@@ -74,6 +75,7 @@ class CityCreate(BaseModel):
     name: str
     country: str
     airport: str
+    image_url: str
 
 class EmbeddingRequest(BaseModel):
     embedding: object
